@@ -1,0 +1,1 @@
+App that lets users track their hourly wage, cost of living, and mortgage rates as it relates to the world around them.
