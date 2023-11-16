@@ -15,7 +15,8 @@ SET ENVIRONMENT VARIABLES FOR Android SDK, NPM SDK, Java SDK, Adb:
 - Click on Environment Variables
 - In the bottom box, System variables, You should already see:
   - ChocolateyInstall
-  - JAVA_HOME
+  - JAVA_HOME (C:\Program Files\Microsoft\jdk-11.0.20.8-hotspot)
+  - If jdk 11 does not appear, "choco install microsoft-openjdk11 --force" and set JAVA_HOME
   - Under Path, you should have paths to nodejs, java sdk, and chocolatey
 - On your machine, press WINDOWS KEY + R, type "%appdata%"
 - Go up one folder, and click the Local directory, here you should see an Android folder, click it
@@ -26,12 +27,10 @@ SET ENVIRONMENT VARIABLES FOR Android SDK, NPM SDK, Java SDK, Adb:
   - For adb, add a path here for C:\Users\garre\AppData\Local\Android\Sdk\platform-tools
   - For chocolatey, add a path for C:\ProgramData\chocolatey\bin
   - For nodejs, C:\Program Files\nodejs\
-  - Make sure jdk 11 appears here too
+  - Make sure jdk 11 appears here too, C:\Program Files\Microsoft\jdk-11.0.20.8-hotspot\bin
 
 GO TO ANDROID STUDIO:
-- Open project location, if making a new project run "npx react-native init ProjectName"
-  - By default, React-Native uses typescript(.tsx)
-  - You can change to javascript by creating an App.js, and telling index.js to run that instead
+- Open project location
 - File > Settings > Android SDK (Under Languages and Frameworks)
 - Under SDK Platforms, click Show Package Details in bottom right, scroll down to see Android 13.0 Tiramisu and select
   - Android SDK Platform 33
