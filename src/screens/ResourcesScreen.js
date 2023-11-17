@@ -6,10 +6,13 @@ const ResourcesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text onPress={() => Linking.openURL('https://www.ziprecruiter.com')}>
-        <Text style={styles.header}>
-          Jobs in Your Area{"\n"}
-        </Text>
+      <Text style={styles.test} onPress={() => Linking.openURL('https://www.ziprecruiter.com')}>
+        
+        <View style={styles.headerContainer}>
+          <Text style={styles.header}>
+            Jobs in Your Area{"\n"}
+          </Text>
+        </View>
 
         <Text style={styles.body}>
           Click here for job site{"\n"}
@@ -24,7 +27,7 @@ const ResourcesScreen = () => {
 
       <Text onPress={() => Linking.openURL('https://www.indeed.com/career-advice/pay-salary/guide-how-to-ask-for-a-raise')}>
         <Text style={styles.header}>
-          How To Ask For a Raise{"\n"}
+        {"\n"}How To Ask For a Raise{"\n"}
         </Text>
 
         <Text style={styles.body}>
@@ -40,7 +43,7 @@ const ResourcesScreen = () => {
 
       <Text onPress={() => Linking.openURL('https://www.nerdwallet.com/article/finance/how-to-save-money')}>
         <Text style={styles.header}>
-          Ways to Save Money{"\n"}
+        {"\n"}Ways to Save Money{"\n"}
         </Text>
 
         <Text style={styles.body}>
@@ -56,7 +59,7 @@ const ResourcesScreen = () => {
 
       <Text onPress={() => Linking.openURL('https://play.google.com/store/search?q=budgeting+apps+free&c=apps&hl=en_US&gl=US')}>
         <Text style={styles.header}>
-          Budgeting Apps{"\n"}
+        {"\n"}Budgeting Apps{"\n"}
         </Text>
 
         <Text style={styles.body}>
@@ -78,17 +81,32 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'left',
-    padding: 15,
+    margin: 10,
+    // backgroundColor: "yellow",
+  },
+  test: {
+    // margin: 10,
+    // backgroundColor: "purple",
   },
   header: {
     color: "red",
     fontSize: 20,
+    fontWeight: '600',
+    // backgroundColor: "green",
+    // padding: "auto",
+  },
+  headerContainer: {
+    paddingBottom: 15,
+    backgroundColor: 'grey',
+    width: '100%',
   },
   body: {
     color: "blue",
+    // backgroundColor: "red",
   },
   description: {
     color: "green",
+    // backgroundColor: "white",
   },
   line: {
     borderBottomColor: 'black',
