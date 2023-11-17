@@ -5,7 +5,10 @@ const ResourcesScreen = () => {
 
   return (
     <View style={styles.container}>
-      <Text>Resources Screen</Text>
+      <Text>
+        <Text style={styles.header}>Header{"\n"}</Text>
+        <Text style={styles.body}>Body</Text>
+      </Text>
     </View>
   );
 };
@@ -23,6 +26,12 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     margin: 10,
     padding: 5,
+  },
+  header: {
+    color: "red",
+  },
+  name: {
+    color: "blue",
   },
 });
 
