@@ -12,11 +12,11 @@ const ResourcesScreen = () => {
         </Text>
 
         <Text style={styles.body}>
-          Direct Link to job site{"\n"}
+          Click here for job site{"\n"}
         </Text>
 
         <Text style={styles.description}>
-          Short description of job site{"\n"}
+          ZipRecruiter: Online job marketplace connecting employers and seekers with algorithm-based matching. Job seekers can upload resumes for visibility.{"\n"}
         </Text>
       </Text>
       
@@ -28,11 +28,11 @@ const ResourcesScreen = () => {
         </Text>
 
         <Text style={styles.body}>
-          Direct Link to job site{"\n"}
+          Click here for tips to asking for a raise{"\n"}
         </Text>
 
         <Text style={styles.description}>
-          Short description of job site{"\n"}
+          In this video, we explain how to ask for a raise, how to calculate your ask, measure your contributions and help you earn what you deserve.{"\n"}
         </Text>
       </Text>
       
@@ -44,11 +44,11 @@ const ResourcesScreen = () => {
         </Text>
 
         <Text style={styles.body}>
-          Direct Link to job site{"\n"}
+          Click here for tips to save money{"\n"}
         </Text>
 
         <Text style={styles.description}>
-          Short description of job site{"\n"}
+          Money-saving tips include shopping smart, bundling services, canceling subscriptions and more.{"\n"}
         </Text>
       </Text>
       
@@ -60,11 +60,11 @@ const ResourcesScreen = () => {
         </Text>
 
         <Text style={styles.body}>
-          Direct Link to job site{"\n"}
+          Click here for budgeting apps on the Google Play Store{"\n"}
         </Text>
 
         <Text style={styles.description}>
-          Short description of job site{"\n"}
+          Discover top-rated budgeting apps on Google Play. Easily manage expenses, track income, and set savings goals for financial success.{"\n"}
         </Text>
       </Text>
       
