@@ -30,7 +30,10 @@ const MainTabs = ({ route }) => {
     <Tab.Navigator
       screenOptions={{
         tabBarLabelStyle: { fontSize: 16 }, // Font size of the tab labels
-        tabBarStyle: { height: 60 }, // Height of the tab bar
+        tabBarStyle: { 
+          height: 60,
+          // backgroundColor: "#292e3d"
+         }
       }}
     >
       <Tab.Screen name="Resources" component={ResourcesScreen} />
