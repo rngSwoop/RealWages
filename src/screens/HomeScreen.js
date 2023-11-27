@@ -53,7 +53,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   buttonContainer: {
-    marginBottom: 5, // Add margin to separate each button and definition
+    marginBottom: 5, // Add margin to separate each button and the definitions
   },
   button: {
     padding: 10,
