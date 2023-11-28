@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity} from 'react-native';
+import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity} from 'react-native';
 
 const App = () => {
   const [visibleIndex, setVisibleIndex] = useState(null);
@@ -19,6 +19,7 @@ const App = () => {
   };
 
   return (
+    <ScrollView contentContainerStyle={styles.container}>
     <View style={styles.container}>
       <Text>Graph 1</Text>
       <View style={styles.line}></View>
@@ -43,6 +44,7 @@ const App = () => {
         </View>
       ))}
     </View>
+    </ScrollView>
   );
 };
 
