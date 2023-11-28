@@ -45,10 +45,24 @@ const ProfileScreen = ({navigation}) => {
     setModalVisible(false);
   };
 
-  const isValidDate = date => {
-    // You can implement more sophisticated validation here
-    return /\d{2}\/\d{2}\/\d{2}/.test(date);
-  };
+const isValidDate = date => {
+  // Check if the date matches the format mm/dd/yy
+  const regex = /^\d{2}\/\d{2}\/\d{2}$/;
+  if (!regex.test(date)) {
+    return false;
+  }
+  // Extract month, day, and year from the date string
+  const [month, day, year] = date.split('/').map(Number);
+  // Check if the month is between 1 and 12
+  if (month < 1 || month > 12) {
+    return false;
+  }
+  // Check if the day is between 1 and 31
+  if (day < 1 || day > 31) {
+    return false;
+  }
+  return true;
+};
 
   const isValidWage = wage => {
     // You can implement more sophisticated validation here
