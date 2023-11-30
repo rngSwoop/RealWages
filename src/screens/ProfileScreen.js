@@ -45,9 +45,40 @@ const ProfileScreen = ({navigation}) => {
     setModalVisible(false);
   };
 
+  const deleteItem = item => {
+    // Filter out the item that was deleted
+    const filteredData = data.filter(entry => entry !== item);
+    setData(filteredData);
+  };
+
+  const editItem = item => {
+    // Filter out the item that was edited
+    const filteredData = data.filter(entry => entry !== item);
+    setData(filteredData);
+    // Set the input fields to the values of the edited item
+    setNewDate(item.date);
+    setNewWage(item.wage);
+    // Open the modal
+    setModalVisible(true);
+  };
+
   const isValidDate = date => {
-    // You can implement more sophisticated validation here
-    return /\d{2}\/\d{2}\/\d{2}/.test(date);
+    // Check if the date matches the format mm/dd/yy
+    const regex = /^\d{2}\/\d{2}\/\d{2}$/;
+    if (!regex.test(date)) {
+      return false;
+    }
+    // Extract month, day, and year from the date string
+    const [month, day, year] = date.split('/').map(Number);
+    // Check if the month is between 1 and 12
+    if (month < 1 || month > 12) {
+      return false;
+    }
+    // Check if the day is between 1 and 31
+    if (day < 1 || day > 31) {
+      return false;
+    }
+    return true;
   };
 
   const isValidWage = wage => {
@@ -57,65 +88,69 @@ const ProfileScreen = ({navigation}) => {
   };
 
   return (
-      <View style={styles.container}>
-        <View style={styles.listContainer}>
-          <FlatList
-            data={data}
-            keyExtractor={(item, index) => index.toString()}
-            renderItem={({item}) => (
+    <View style={styles.container}>
+      <View style={styles.listContainer}>
+        <FlatList
+          data={data}
+          keyExtractor={(item, index) => index.toString()}
+          renderItem={({item}) => (
+            <View style={styles.listItemContainer}>
               <View style={styles.listItem}>
                 <Text style={styles.listText}>Date: {item.date}</Text>
                 <Text style={styles.listText}>Wage: {item.wage}</Text>
               </View>
-            )}
-          />
-          <TouchableOpacity
-            style={styles.addButton}
-            onPress={() => setModalVisible(true)}>
-            <Text style={styles.buttonText}>Add</Text>
-          </TouchableOpacity>
-        </View>
-
-        <View style={styles.signOutContainer}>
-          <TouchableOpacity
-            style={styles.signOutButton}
-            onPress={handleSignOut}>
-            <Text style={styles.buttonText}>Sign Out</Text>
-          </TouchableOpacity>
-        </View>
-
-        <Modal visible={modalVisible} animationType="slide" transparent={true}>
-          <View style={styles.modalContainer}>
-            <TextInput
-              placeholder="Date: mm/dd/yy"
-              value={newDate}
-              onChangeText={text => setNewDate(text)}
-              style={styles.input}
-            />
-            <TextInput
-              placeholder="Wage: 123456"
-              value={newWage}
-              onChangeText={text => setNewWage(text)}
-              keyboardType="numeric" // Allow only numeric input
-              style={styles.input}
-            />
-
-            <View style={styles.modalButtons}>
-              <TouchableOpacity
-                style={styles.submitButton}
-                onPress={handleAddEntry}>
-                <Text style={styles.buttonText}>Submit</Text>
+              <TouchableOpacity style={styles.deleteButton} onPress={() => deleteItem(item)}>
+                <Text style={styles.buttonText}>Delete</Text>
               </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.cancelButton}
-                onPress={() => setModalVisible(false)}>
-                <Text style={styles.cancelButtonText}>Cancel</Text>
+              <TouchableOpacity style={styles.editButton} onPress={() => editItem(item)}>
+                <Text style={styles.buttonText}>Edit</Text>
               </TouchableOpacity>
             </View>
-          </View>
-        </Modal>
+          )}
+        />
+        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Add</Text>
+        </TouchableOpacity>
       </View>
+
+      <View style={styles.signOutContainer}>
+        <TouchableOpacity style={styles.signOutButton} onPress={handleSignOut}>
+          <Text style={styles.buttonText}>Sign Out</Text>
+        </TouchableOpacity>
+      </View>
+
+      <Modal visible={modalVisible} animationType="slide" transparent={true}>
+        <View style={styles.modalContainer}>
+          <TextInput
+            placeholder="Date: mm/dd/yy"
+            value={newDate}
+            onChangeText={text => setNewDate(text)}
+            style={styles.input}
+          />
+          <TextInput
+            placeholder="Wage: 123456"
+            value={newWage}
+            onChangeText={text => setNewWage(text)}
+            keyboardType="numeric" // Allow only numeric input
+            style={styles.input}
+          />
+
+          <View style={styles.modalButtons}>
+            <TouchableOpacity
+              style={styles.submitButton}
+              onPress={handleAddEntry}>
+              <Text style={styles.buttonText}>Submit</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.cancelButton}
+              onPress={() => setModalVisible(false)}>
+              <Text style={styles.cancelButtonText}>Cancel</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </Modal>
+    </View>
   );
 };
 
@@ -135,19 +170,41 @@ const styles = StyleSheet.create({
     backgroundColor: '#454d66',
     width: '100%',
   },
-  listItem: {
-    marginVertical: 10,
-    width: '100%',
-  },
   listContainer: {
     flex: 3,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
+    borderColor: 'green',
+    borderWidth: 1,
+  },
+  listItemContainer: {
+    alignItems: 'center',
+    width: '65%',
+    flexDirection: 'row',
+    borderColor: 'blue',
+    borderWidth: 1,
+  },
+  listItem: {
+    marginVertical: 10,
+    width: '100%',
+    borderColor: 'red',
+    borderWidth: 1,
   },
   listText: {
     color: 'white',
     fontSize: 16,
+  },
+  deleteButton: {
+    backgroundColor: '#d11a2a',
+    margin: 5,
+    padding: 8,
+    borderRadius: 5,
+  },
+  editButton: {
+    backgroundColor: '#309975',
+    padding: 8,
+    borderRadius: 5,
   },
   signOutContainer: {
     flex: 1,
