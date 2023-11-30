@@ -1,4 +1,5 @@
-import React, {useState} from 'react';
+import React, { useState, useContext, useEffect } from 'react';
+import { UserContext } from '../assets/UserContext';
 import {
   View,
   Text,
@@ -10,13 +11,65 @@ import {
   Keyboard,
   KeyboardAvoidingView,
 } from 'react-native';
-import {auth} from '../../firebase.js';
+import {auth, firestore } from '../../firebase.js';
+import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
 
 const ProfileScreen = ({navigation}) => {
   const [data, setData] = useState([]); // State to hold the list of entries
   const [modalVisible, setModalVisible] = useState(false);
   const [newDate, setNewDate] = useState('');
   const [newWage, setNewWage] = useState('');
+  const { userID } = useContext(UserContext); // grab current userID from our context
+
+
+  // Function to fetch user-specific wage data from Firestore
+  // This code works but does not filter to show only docs with the correct userID
+//  const fetchUserWageData = async () => {
+//    try {
+//      const wageDataCollection = collection(firestore, 'wageData');
+//      const userWageDataSnapshot = await getDocs(wageDataCollection);
+//
+//      const userWageData = [];
+//      userWageDataSnapshot.forEach(doc => {
+//        const { date, wage } = doc.data();
+//        userWageData.push({ date, wage });
+//      });
+//
+//      setData(userWageData);
+//    } catch (error) {
+//      console.error('Error fetching user wage data:', error);
+//    }
+//  };
+//
+//  // Fetch user-specific wage data when component mounts
+//  useEffect(() => {
+//    fetchUserWageData();
+//  }, []);
+
+  // Here we are filtering for userID, but it is done locally which could be extremely inefficient
+  // Need to find way to filter within the query to the db, but for now this will do
+  useEffect(() => {
+      const fetchUserWageData = async () => {
+        try {
+          const wageDataCollection = collection(firestore, 'wageData');
+          const querySnapshot = await getDocs(wageDataCollection);
+
+          const userWageData = [];
+          querySnapshot.forEach(doc => {
+            const { userID: docUserID, date, wage } = doc.data();
+            if (docUserID === userID) {
+              userWageData.push({ date, wage });
+            }
+          });
+
+          setData(userWageData);
+        } catch (error) {
+          console.error('Error fetching user wage data:', error);
+        }
+      };
+
+      fetchUserWageData();
+    }, [userID]);
 
   const handleSignOut = () => {
     auth
@@ -30,19 +83,43 @@ const ProfileScreen = ({navigation}) => {
       });
   };
 
-  const handleAddEntry = () => {
+  const handleAddEntry = async () => {
     // Validate input fields before adding to the list
     if (!isValidDate(newDate) || !isValidWage(newWage)) {
       // Display an alert or handle invalid input
       return;
     }
 
-    // Add new entry to the list
-    setData([...data, {date: newDate, wage: newWage}]);
-    // Reset input fields and close the modal
-    setNewDate('');
-    setNewWage('');
-    setModalVisible(false);
+    try {
+      // Add new entry to the list
+      setData([...data, { date: newDate, wage: newWage }]);
+
+      // Add the new entry to Firestore
+      await addEntryToFirestore(newDate, newWage);
+
+      // Reset input fields and close the modal
+      setNewDate('');
+      setNewWage('');
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error adding user wage data:', error);
+    }
+  };
+
+  const addEntryToFirestore = async (date, wage) => {
+    try {
+      const wageDataCollection = collection(firestore, 'wageData');
+      const docRef = doc(wageDataCollection);
+
+      await setDoc(docRef, {
+        userID: userID,
+        date: date,
+        wage: wage,
+      });
+    } catch (error) {
+      console.error('Error adding user wage data:', error);
+      throw error; // Propagate the error upwards
+    }
   };
 
   const deleteItem = item => {

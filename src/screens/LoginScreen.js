@@ -1,17 +1,20 @@
-import React, { useState } from 'react';
+import React, { useState, useContext } from 'react';
 import { KeyboardAvoidingView, TouchableOpacity, View, Text, TextInput, Button, StyleSheet } from 'react-native';
 import { auth, handleSignUp, handleLogin } from '../../firebase';
 //import auth from "@react-native-firebase/auth";
+import { UserContext } from '../assets/UserContext';
 
 const LoginScreen = ({ navigation }) => {
   const [email, setEmail] = useState('Garrett@test.com');
   const [password, setPassword] = useState('password');
+  const { userID, setUserID } = useContext(UserContext);
 
   const handleLoginPress = () => {
     handleLogin(email, password)
       .then(userCredential => {
         const user = userCredential.user;
-        console.log('User logged in:', user.email);
+        console.log('User logged in:', user.email, user.uid);
+        setUserID(user.uid);
         navigation.navigate('Main');
       })
       .catch(error => {
@@ -46,7 +49,8 @@ const LoginScreen = ({ navigation }) => {
     handleSignUp(email, password)
         .then(userCredential => {
           const user = userCredential.user;
-          console.log('User registered:', user.email);
+          console.log('User registered:', user.email, user.uid);
+          setUserID(user.uid);
           navigation.navigate('Main');
         })
         .catch((error) => {

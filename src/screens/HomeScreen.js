@@ -1,9 +1,11 @@
-import React, { useState } from 'react';
+import React, {useState, useContext } from 'react';
+import { UserContext } from '../assets/UserContext';
 import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity} from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 
-const App = () => {
+const HomeScreen = () => {
   const [visibleIndex, setVisibleIndex] = useState(null);
+  const { userID } = useContext(UserContext);
 
   const buttons = [
     { label: "What is Inflation?", definition: "Inflation is the rate at which the general level of prices for goods and services is rising, and consequently, the value of your money is eroding. In simpler terms, when there is inflation, each dollar you have buys you less than it did before, making it harder to afford the same things you could with the same amount of money in the past." },
@@ -135,4 +137,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default App;
+export default HomeScreen;

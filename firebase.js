@@ -2,6 +2,7 @@ import { initializeApp } from 'firebase/app';
 import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword } from 'firebase/auth';
 import { getReactNativePersistence } from 'firebase/auth';
 import ReactNativeAsyncStorage from '@react-native-async-storage/async-storage';
+import { getFirestore, addDoc, collection } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAjwlbYRy51NGL_yqZPHYueA00xeIB0sc8",
@@ -15,6 +16,8 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const firebaseApp = initializeApp(firebaseConfig);
+// Get a reference to the Firestore instance
+const firestore = getFirestore(firebaseApp);
 
 // Get the Firebase Authentication service
 const auth = getAuth(firebaseApp, {
@@ -29,4 +32,4 @@ const handleLogin = (email, password) => {
   return signInWithEmailAndPassword(auth, email, password);
 };
 
-export { auth, handleSignUp, handleLogin };
+export { auth, handleSignUp, handleLogin, firestore };
