@@ -12,7 +12,7 @@ import {
   KeyboardAvoidingView,
 } from 'react-native';
 import {auth, firestore } from '../../firebase.js';
-import { doc, getDoc, setDoc, collection, getDocs } from 'firebase/firestore';
+import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 
 const ProfileScreen = ({navigation}) => {
   const [data, setData] = useState([]); // State to hold the list of entries
@@ -23,53 +23,44 @@ const ProfileScreen = ({navigation}) => {
 
 
   // Function to fetch user-specific wage data from Firestore
-  // This code works but does not filter to show only docs with the correct userID
-//  const fetchUserWageData = async () => {
-//    try {
-//      const wageDataCollection = collection(firestore, 'wageData');
-//      const userWageDataSnapshot = await getDocs(wageDataCollection);
-//
-//      const userWageData = [];
-//      userWageDataSnapshot.forEach(doc => {
-//        const { date, wage } = doc.data();
-//        userWageData.push({ date, wage });
-//      });
-//
-//      setData(userWageData);
-//    } catch (error) {
-//      console.error('Error fetching user wage data:', error);
-//    }
-//  };
-//
-//  // Fetch user-specific wage data when component mounts
-//  useEffect(() => {
-//    fetchUserWageData();
-//  }, []);
-
-  // Here we are filtering for userID, but it is done locally which could be extremely inefficient
-  // Need to find way to filter within the query to the db, but for now this will do
   useEffect(() => {
-      const fetchUserWageData = async () => {
-        try {
-          const wageDataCollection = collection(firestore, 'wageData');
-          const querySnapshot = await getDocs(wageDataCollection);
+    const fetchUserWageData = async () => {
+      try {
+        const wageDataCollection = collection(firestore, 'wageData');
 
-          const userWageData = [];
-          querySnapshot.forEach(doc => {
-            const { userID: docUserID, date, wage } = doc.data();
-            if (docUserID === userID) {
-              userWageData.push({ date, wage });
-            }
-          });
+        // Create a query to fetch documents where userID matches the current userID
+        const q = query(wageDataCollection, where('userID', '==', userID));
 
-          setData(userWageData);
-        } catch (error) {
-          console.error('Error fetching user wage data:', error);
-        }
-      };
+        const querySnapshot = await getDocs(q);
 
-      fetchUserWageData();
-    }, [userID]);
+        const userWageData = [];
+        querySnapshot.forEach(doc => {
+          const { date, wage } = doc.data();
+          const documentId = doc.id; // get the document ID
+          userWageData.push({ documentId, date, wage });
+        });
+
+        userWageData.sort((a, b) => {
+          const dateA = new Date(
+            // Assuming date format is MM/DD/YY
+            `20${a.date.slice(-2)}-${a.date.slice(0, 2)}-${a.date.slice(3, 5)}`
+          );
+          const dateB = new Date(
+            `20${b.date.slice(-2)}-${b.date.slice(0, 2)}-${b.date.slice(3, 5)}`
+          );
+
+          return dateA - dateB;
+        });
+
+        setData(userWageData);
+      } catch (error) {
+        console.error('Error fetching user wage data:', error);
+      }
+    };
+
+    fetchUserWageData();
+  }, [userID]);
+
 
   const handleSignOut = () => {
     auth
@@ -91,11 +82,11 @@ const ProfileScreen = ({navigation}) => {
     }
 
     try {
-      // Add new entry to the list
-      setData([...data, { date: newDate, wage: newWage }]);
-
       // Add the new entry to Firestore
-      await addEntryToFirestore(newDate, newWage);
+      const { documentId } = await addEntryToFirestore(newDate, newWage);
+
+      // Add new entry to the list
+      setData([...data, { documentId, date: newDate, wage: newWage }]);
 
       // Reset input fields and close the modal
       setNewDate('');
@@ -109,34 +100,77 @@ const ProfileScreen = ({navigation}) => {
   const addEntryToFirestore = async (date, wage) => {
     try {
       const wageDataCollection = collection(firestore, 'wageData');
-      const docRef = doc(wageDataCollection);
 
-      await setDoc(docRef, {
+      const docRef = await addDoc(wageDataCollection, {
         userID: userID,
         date: date,
         wage: wage,
       });
+
+      // Get the ID of the added document from the reference
+      const documentId = docRef.id;
+
+      return { documentId, docRef }; // Return the document ID and reference
     } catch (error) {
       console.error('Error adding user wage data:', error);
       throw error; // Propagate the error upwards
     }
   };
 
-  const deleteItem = item => {
-    // Filter out the item that was deleted
-    const filteredData = data.filter(entry => entry !== item);
-    setData(filteredData);
+  const deleteItem = async item => {
+    try {
+
+        // Delete the document from the 'wageData' collection
+        const docRef = doc(collection(firestore, 'wageData'), item.documentId);
+        await deleteDoc(docRef);
+
+        // Update the local state to reflect the deletion
+        const filteredData = data.filter(entry => entry !== item);
+        setData(filteredData);
+      } catch (error) {
+        console.error('Error deleting item:', error);
+      }
   };
 
-  const editItem = item => {
-    // Filter out the item that was edited
-    const filteredData = data.filter(entry => entry !== item);
-    setData(filteredData);
-    // Set the input fields to the values of the edited item
-    setNewDate(item.date);
-    setNewWage(item.wage);
-    // Open the modal
-    setModalVisible(true);
+  const editItem = async (item) => {
+    try {
+      // Set the input fields to the values of the edited item
+      setNewDate(item.date);
+      setNewWage(item.wage);
+      setModalVisible(true);
+
+      // Handle editing
+      const handleEdit = async () => {
+        const wageDataCollection = collection(firestore, 'wageData');
+        const docRef = doc(wageDataCollection, item.documentId);
+
+        await setDoc(docRef, {
+          date: newDate,
+          wage: newWage,
+        });
+
+        // Update the local state with the edited item
+        const updatedData = data.map((entry) => {
+          if (entry.documentId === item.documentId) {
+            return {
+              ...entry,
+              date: newDate,
+              wage: newWage,
+            };
+          }
+          return entry;
+        });
+        setData(updatedData);
+
+        // Close the modal after editing
+        setModalVisible(false);
+      };
+
+      // Return the function to perform editing
+      return handleEdit;
+    } catch (error) {
+      console.error('Error editing item:', error);
+    }
   };
 
   const isValidDate = date => {
