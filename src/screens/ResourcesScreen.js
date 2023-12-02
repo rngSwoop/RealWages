@@ -2,7 +2,25 @@ import React, { useState } from 'react';
 import { View, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { Linking } from 'react-native';
 
-const ResourcesScreen = () => {
+const ResourcesScreen = ({ navigation }) => {
+
+    // Customizing the header
+    const navigationOptions = {
+      title: 'Resources', // Set the title of the header
+      headerStyle: {
+        backgroundColor: 'blue', // Set the background color of the header
+      },
+      headerTintColor: 'white', // Set the text color of the header
+      headerTitleStyle: {
+        fontWeight: 'bold', // Set the font weight of the title
+      },
+      headerTitleAlign: 'center',
+    };
+  
+    // Apply the navigation options
+    React.useLayoutEffect(() => {
+      navigation.setOptions(navigationOptions);
+    }, [navigation]);
 
   return (
     <View style={styles.container}>
