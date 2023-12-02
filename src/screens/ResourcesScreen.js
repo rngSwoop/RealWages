@@ -8,9 +8,9 @@ const ResourcesScreen = ({ navigation }) => {
     const navigationOptions = {
       title: 'Resources', // Set the title of the header
       headerStyle: {
-        backgroundColor: 'blue', // Set the background color of the header
+        backgroundColor: 'white', // Set the background color of the header
       },
-      headerTintColor: 'white', // Set the text color of the header
+      headerTintColor: 'black', // Set the text color of the header
       headerTitleStyle: {
         fontWeight: 'bold', // Set the font weight of the title
       },

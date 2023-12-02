@@ -187,7 +187,7 @@ const HomeScreen = () => {
                 </TouchableOpacity>
                 {visibleIndex === index && (
                   <View style={styles.definitionContainer}>
-                    <Text>{button.definition}</Text>
+                    <Text style={styles.definitonText}>{button.definition}</Text>
                   </View>
                 )}
               </View>
@@ -207,6 +207,10 @@ const styles = StyleSheet.create({
   },
   buttonText: {
     fontWeight: 'bold',
+    color: "black",
+  },
+  definitionText: {
+    color: "black",
   },
   buttonView: {
     width: "100%",
