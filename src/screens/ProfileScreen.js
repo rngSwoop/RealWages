@@ -21,16 +21,20 @@ const ProfileScreen = ({navigation}) => {
   const [newWage, setNewWage] = useState('');
   const { userID } = useContext(UserContext); // grab current userID from our context
 
+  // Function to sort data based on date
+  const sortDataByDate = (data) => {
+    return data.sort((a, b) => {
+      const dateA = new Date(`20${a.date.slice(-2)}-${a.date.slice(0, 2)}-${a.date.slice(3, 5)}`);
+      const dateB = new Date(`20${b.date.slice(-2)}-${b.date.slice(0, 2)}-${b.date.slice(3, 5)}`);
+      return dateA - dateB;
+    });
+  };
 
   // Function to fetch user-specific wage data from Firestore
-  useEffect(() => {
-    const fetchUserWageData = async () => {
+  const fetchUserWageData = async () => {
       try {
         const wageDataCollection = collection(firestore, 'wageData');
-
-        // Create a query to fetch documents where userID matches the current userID
         const q = query(wageDataCollection, where('userID', '==', userID));
-
         const querySnapshot = await getDocs(q);
 
         const userWageData = [];
@@ -58,8 +62,9 @@ const ProfileScreen = ({navigation}) => {
       }
     };
 
-    fetchUserWageData();
-  }, [userID]);
+    useEffect(() => {
+      fetchUserWageData();
+    }, [userID]);
 
 
   const handleSignOut = () => {
@@ -160,11 +165,17 @@ const ProfileScreen = ({navigation}) => {
           }
           return entry;
         });
-        setData(updatedData);
+        setData (updatedData);
 
         // Close the modal after editing
         setModalVisible(false);
+
+        // Fetch updated data after editing
+        await fetchUserWageData();
       };
+
+      // Delete the previous item
+      deleteItem(item);
 
       // Return the function to perform editing
       return handleEdit;
