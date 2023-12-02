@@ -4,23 +4,7 @@ import { LineChart } from 'react-native-chart-kit';
 import { UserContext } from '../assets/UserContext';
 import {auth, firestore } from '../../firebase.js';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
-
-// will get rid of this once we are pulling from database
-class dummyUserEntry {
-  constructor(wage, date) {
-    this.wage = wage;
-    this.date = date;
-  }
-}
-
-// this will stay, need endDate for each entry
-class wageGraphDatapoint {
-  constructor(wage, startDate, endDate) {
-    this.wage = wage;
-    this.startDate = startDate;
-    this.endDate = endDate;
-  }
-}
+import Graph from '../components/Graph';
 
 const HomeScreen = () => {
   const [visibleIndex, setVisibleIndex] = useState(null);
@@ -40,104 +24,15 @@ const HomeScreen = () => {
     setVisibleIndex(visibleIndex === index ? null : index);
   };
 
-  // // this needs to be pulled from the database, just making a dummy list for now
-  // let userWageData = [];
-  // // pushing dummy data
-  // userWageData.push(new dummyUserEntry(35000, '2023-01-01'));
-  // userWageData.push(new dummyUserEntry(37500, '2023-06-01'));
-
-  // let wageData = [];
-  // for (let i = 0; i < userWageData.length; i++) {
-  //   let wage = userWageData[i].wage;
-  //   let startDate = userWageData[i].date;
-  //   let endDate;
-
-  //   if (i + 1 < userWageData.length) {
-  //     // if not the last entry, set endDate to the next entries startDate
-  //     endDate = userWageData[i + 1].date;
-  //   } else {
-  //     // if last entry, set endDate to todays date
-  //     endDate = new Date().toISOString().split('T')[0];
-  //   }
-
-  //   wageData.push(new wageGraphDatapoint(wage, startDate, endDate));
-  // }
-
-  // const inflationRate = 0.02;
-  // const inflationAdjustedData = [];
-
-  // userWageData.forEach((wage, wageIndex) => {
-  //   for (let month = wage.startDate; month <= wage.endDate; month++) {
-  //     let cumulativeInflation = Math.pow(1 + inflationRate, (month - wages[wageIndex].startPeriod) / 12);
-  //     let adjustedWage = wage.amount * cumulativeInflation;
-  //     inflationAdjustedData.push(adjustedWage);
-  //   }
-  // })
-
-  const wages = [
-    { amount: 50000, startPeriod: 0, endPeriod: 12 }, // Wage for 12 months
-    { amount: 52000, startPeriod: 12, endPeriod: 24 }, // Next wage for the following 12 months
-    // ... more wages as needed
-  ];
-
-  const inflationRate = 0.02; // Annual inflation rate of 2% for simplicity
-
-  // Preparing the wage and inflation-adjusted data
-  let wageData = [];
-  let inflationAdjustedData = [];
-
-  wages.forEach((wage, wageIndex) => {
-    for (let month = wage.startPeriod; month <= wage.endPeriod; month++) {
-      wageData.push(wage.amount);
-
-      // Calculate the cumulative inflation since the start of this wage period
-      let cumulativeInflation = Math.pow(1 + inflationRate, (month - wages[wageIndex].startPeriod) / 12);
-      let adjustedWage = wage.amount * cumulativeInflation;
-      inflationAdjustedData.push(adjustedWage);
-    }
-  });
-
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
         <Text style={{ fontSize: 20, textAlign: 'center', marginVertical: 10 }}>
           Wage vs. Inflation Over Time
         </Text>
-        <LineChart
-          data={{
-            labels: ['2019', '2020', '2021', '2022'],
-            datasets: [
-              {
-                data: wageData,
-                color: (opacity = 1) => `rgba(255, 0, 0, ${opacity})`, // Color for wage line
-                strokeWidth: 5,
-              },
-              {
-                data: inflationAdjustedData,
-                color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Color for inflation-adjusted line
-                strokeWidth: 5,
-              }
-            ],
-          }}
-          width={400} // from react-native
-          height={220}
-          withDots={false}
-          yAxisLabel="$"
-          yAxisInterval={1} // optional, defaults to 1
-          chartConfig={{
-            backgroundColor: "#e26a00",
-            backgroundGradientFrom: "#fb8c00",
-            backgroundGradientTo: "#ffa726",
-            decimalPlaces: 0,
-            color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-            labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`
-          }}
-          style={{
-            marginVertical: 8,
-            margin: 15,
-            borderRadius: 16
-          }}
-        />
+
+        <Graph/>
+        
         <Text>Graph 1</Text>
         <View style={styles.line}></View>
         <Text>Graph 2</Text>
