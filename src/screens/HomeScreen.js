@@ -1,6 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useContext, useEffect } from 'react';
 import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
+import { UserContext } from '../assets/UserContext';
+import {auth, firestore } from '../../firebase.js';
+import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 
 // will get rid of this once we are pulling from database
 class dummyUserEntry {
@@ -19,7 +22,7 @@ class wageGraphDatapoint {
   }
 }
 
-const App = () => {
+const HomeScreen = () => {
   const [visibleIndex, setVisibleIndex] = useState(null);
   const { userID } = useContext(UserContext);
 
