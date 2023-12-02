@@ -17,6 +17,57 @@ const ProfileScreen = ({navigation}) => {
   const [modalVisible, setModalVisible] = useState(false);
   const [newDate, setNewDate] = useState('');
   const [newWage, setNewWage] = useState('');
+<<<<<<< Updated upstream
+=======
+  const { userID } = useContext(UserContext); // grab current userID from our context
+  const [editedItem, setEditedItem] = useState('');
+
+  // Function to sort data based on date
+  const sortDataByDate = (data) => {
+    return data.sort((a, b) => {
+      const dateA = new Date(`20${a.date.slice(-2)}-${a.date.slice(0, 2)}-${a.date.slice(3, 5)}`);
+      const dateB = new Date(`20${b.date.slice(-2)}-${b.date.slice(0, 2)}-${b.date.slice(3, 5)}`);
+      return dateA - dateB;
+    });
+  };
+
+  // Function to fetch user-specific wage data from Firestore
+  const fetchUserWageData = async () => {
+      try {
+        const wageDataCollection = collection(firestore, 'wageData');
+        const q = query(wageDataCollection, where('userID', '==', userID));
+        const querySnapshot = await getDocs(q);
+
+        const userWageData = [];
+        querySnapshot.forEach(doc => {
+          const { date, wage } = doc.data();
+          const documentId = doc.id; // get the document ID
+          userWageData.push({ documentId, date, wage });
+        });
+
+        userWageData.sort((a, b) => {
+          const dateA = new Date(
+            // Assuming date format is MM/DD/YY
+            `20${a.date.slice(-2)}-${a.date.slice(0, 2)}-${a.date.slice(3, 5)}`
+          );
+          const dateB = new Date(
+            `20${b.date.slice(-2)}-${b.date.slice(0, 2)}-${b.date.slice(3, 5)}`
+          );
+
+          return dateA - dateB;
+        });
+
+        setData(userWageData);
+      } catch (error) {
+        console.error('Error fetching user wage data:', error);
+      }
+    };
+
+    useEffect(() => {
+      fetchUserWageData();
+    }, [userID]);
+
+>>>>>>> Stashed changes
 
   const handleSignOut = () => {
     auth
@@ -37,12 +88,34 @@ const ProfileScreen = ({navigation}) => {
       return;
     }
 
+<<<<<<< Updated upstream
     // Add new entry to the list
     setData([...data, {date: newDate, wage: newWage}]);
     // Reset input fields and close the modal
     setNewDate('');
     setNewWage('');
     setModalVisible(false);
+=======
+    try {
+
+      if(editedItem != ''){
+        await deleteItem(editedItem);
+        setEditedItem('');
+      }
+      // Add the new entry to Firestore
+      const { documentId } = await addEntryToFirestore(newDate, newWage);
+
+      // Add new entry to the list
+      setData([...data, { documentId, date: newDate, wage: newWage }]);
+
+      // Reset input fields and close the modal
+      setNewDate('');
+      setNewWage('');
+      setModalVisible(false);
+    } catch (error) {
+      console.error('Error adding user wage data:', error);
+    }
+>>>>>>> Stashed changes
   };
 
   const deleteItem = item => {
@@ -51,6 +124,7 @@ const ProfileScreen = ({navigation}) => {
     setData(filteredData);
   };
 
+<<<<<<< Updated upstream
   const editItem = item => {
     // Filter out the item that was edited
     const filteredData = data.filter(entry => entry !== item);
@@ -60,6 +134,54 @@ const ProfileScreen = ({navigation}) => {
     setNewWage(item.wage);
     // Open the modal
     setModalVisible(true);
+=======
+  const deleteItem = async item => {
+    try {
+        // Delete the document from the 'wageData' collection
+        const docRef = doc(collection(firestore, 'wageData'), item.documentId);
+        await deleteDoc(docRef);
+
+        // Update the local state to reflect the deletion
+        console.log(data);
+        const filteredData = data.filter(entry => entry.documentId !== item.documentId);
+        console.log(filteredData);
+        setData(filteredData);
+        console.log(data);
+      } catch (error) {
+        console.error('Error deleting item:', error);
+      }
+  };
+
+  const editItem = async (item) => {
+    try {
+      // Set the input fields to the values of the edited item
+      setNewDate(item.date);
+      setNewWage(item.wage);
+      setModalVisible(true);
+
+      // Handle editing
+      const handleEdit = async () => {
+        const wageDataCollection = collection(firestore, 'wageData');
+        const docRef = doc(wageDataCollection, item.documentId);
+
+        await setDoc(docRef, {
+          date: newDate,
+          wage: newWage,
+        });
+
+        // Close the modal after editing
+        setModalVisible(false);
+      };
+
+      setEditedItem(item);
+      // Fetch updated data after editing
+      await fetchUserWageData();
+      // Return the function to perform editing
+      return handleEdit;
+    } catch (error) {
+      console.error('Error editing item:', error);
+    }
+>>>>>>> Stashed changes
   };
 
   const isValidDate = date => {
