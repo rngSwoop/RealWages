@@ -1,5 +1,5 @@
 import React, { useState, useContext, useEffect } from 'react';
-import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity, SizedBox } from 'react-native';
 import { LineChart } from 'react-native-chart-kit';
 import { UserContext } from '../assets/UserContext';
 import {auth, firestore } from '../../firebase.js';
@@ -23,8 +23,45 @@ class wageGraphDatapoint {
 }
 
 const HomeScreen = () => {
+  const [data, setData] = useState([]); // State to hold the user data
   const [visibleIndex, setVisibleIndex] = useState(null);
   const { userID } = useContext(UserContext);
+
+  // Function to fetch user-specific wage data from Firestore
+    const fetchUserWageData = async () => {
+        try {
+          const wageDataCollection = collection(firestore, 'wageData');
+          const q = query(wageDataCollection, where('userID', '==', userID));
+          const querySnapshot = await getDocs(q);
+
+          const userWageData = [];
+          querySnapshot.forEach(doc => {
+            const { date, wage } = doc.data();
+            const documentId = doc.id; // get the document ID
+            userWageData.push({ documentId, date, wage });
+          });
+
+          userWageData.sort((a, b) => {
+            const dateA = new Date(
+              // Assuming date format is MM/DD/YY
+              `20${a.date.slice(-2)}-${a.date.slice(0, 2)}-${a.date.slice(3, 5)}`
+            );
+            const dateB = new Date(
+              `20${b.date.slice(-2)}-${b.date.slice(0, 2)}-${b.date.slice(3, 5)}`
+            );
+
+            return dateA - dateB;
+          });
+
+          setData(userWageData);
+        } catch (error) {
+          console.error('Error fetching user wage data:', error);
+        }
+      };
+
+      useEffect(() => {
+        fetchUserWageData();
+      }, [userID]);
 
   const buttons = [
     { label: "What is Inflation?", definition: "Inflation is the rate at which the general level of prices for goods and services is rising, and consequently, the value of your money is eroding. In simpler terms, when there is inflation, each dollar you have buys you less than it did before, making it harder to afford the same things you could with the same amount of money in the past." },
@@ -100,8 +137,8 @@ const HomeScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
-        <Text style={{ fontSize: 20, textAlign: 'center', marginVertical: 10 }}>
-          Wage vs. Inflation Over Time
+        <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 5, fontWeight: "bold", color: "black" }}>
+          Wage vs. Inflation
         </Text>
         <LineChart
           data={{
@@ -138,28 +175,24 @@ const HomeScreen = () => {
             borderRadius: 16
           }}
         />
-        <Text>Graph 1</Text>
-        <View style={styles.line}></View>
-        <Text>Graph 2</Text>
-        <View style={styles.line}></View>
-        <Text>Graph 3</Text>
-        <View style={styles.line}></View>
 
-        {buttons.map((button, index) => (
-          <View key={index} style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={styles.button}
-              onPress={() => handleButtonPress(index)}
-            >
-              <Text>{button.label}</Text>
-            </TouchableOpacity>
-            {visibleIndex === index && (
-              <View style={styles.definitionContainer}>
-                <Text>{button.definition}</Text>
+        <View style={styles.buttonView}>
+            {buttons.map((button, index) => (
+              <View key={index} style={styles.buttonContainer}>
+                <TouchableOpacity
+                  style={styles.button}
+                  onPress={() => handleButtonPress(index)}
+                >
+                  <Text style={styles.buttonText}>{button.label}</Text>
+                </TouchableOpacity>
+                {visibleIndex === index && (
+                  <View style={styles.definitionContainer}>
+                    <Text>{button.definition}</Text>
+                  </View>
+                )}
               </View>
-            )}
-          </View>
-        ))}
+            ))}
+        </View>
       </View>
     </ScrollView>
   );
@@ -170,14 +203,37 @@ const styles = StyleSheet.create({
     padding: 5,
     justifyContent: "center",
     alignItems: "center",
+    width: '100%',
+  },
+  buttonText: {
+    fontWeight: 'bold',
+  },
+  buttonView: {
+    width: "100%",
+    marginTop: 25,
+  },
+  titleUnderline: {
+    height: 1,
+    backgroundColor: "grey",
+    width: "100%",
+    marginBottom: 15,
   },
   buttonContainer: {
-    marginBottom: 5, // Add margin to separate each button and the definitions
+    //marginBottom: 5, // Add margin to separate each button and the definitions
+    width: '100%',
+    justifyContent: "center",
+    alignItems: "center",
+    //backgroundColor: "black",
   },
   button: {
     padding: 10,
     margin: 5,
-    backgroundColor: "#DDDDDD",
+    backgroundColor: "white",
+    borderWidth: 1,
+    borderBottomColor: "grey",
+    borderRadius: 10,
+    width: '100%',
+    alignItems: "center",
   },
   definitionContainer: {
     padding: 10,
