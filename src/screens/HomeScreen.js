@@ -36,31 +36,62 @@ const App = () => {
     setVisibleIndex(visibleIndex === index ? null : index);
   };
 
-  // this needs to be pulled from the database, just making a dummy list for now
-  let userWageData = [];
-  // pushing dummy data
-  userWageData.push(new dummyUserEntry(35000, '2023-01-01'));
-  userWageData.push(new dummyUserEntry(37500, '2023-06-01'));
+  // // this needs to be pulled from the database, just making a dummy list for now
+  // let userWageData = [];
+  // // pushing dummy data
+  // userWageData.push(new dummyUserEntry(35000, '2023-01-01'));
+  // userWageData.push(new dummyUserEntry(37500, '2023-06-01'));
 
+  // let wageData = [];
+  // for (let i = 0; i < userWageData.length; i++) {
+  //   let wage = userWageData[i].wage;
+  //   let startDate = userWageData[i].date;
+  //   let endDate;
+
+  //   if (i + 1 < userWageData.length) {
+  //     // if not the last entry, set endDate to the next entries startDate
+  //     endDate = userWageData[i + 1].date;
+  //   } else {
+  //     // if last entry, set endDate to todays date
+  //     endDate = new Date().toISOString().split('T')[0];
+  //   }
+
+  //   wageData.push(new wageGraphDatapoint(wage, startDate, endDate));
+  // }
+
+  // const inflationRate = 0.02;
+  // const inflationAdjustedData = [];
+
+  // userWageData.forEach((wage, wageIndex) => {
+  //   for (let month = wage.startDate; month <= wage.endDate; month++) {
+  //     let cumulativeInflation = Math.pow(1 + inflationRate, (month - wages[wageIndex].startPeriod) / 12);
+  //     let adjustedWage = wage.amount * cumulativeInflation;
+  //     inflationAdjustedData.push(adjustedWage);
+  //   }
+  // })
+
+  const wages = [
+    { amount: 50000, startPeriod: 0, endPeriod: 12 }, // Wage for 12 months
+    { amount: 52000, startPeriod: 12, endPeriod: 24 }, // Next wage for the following 12 months
+    // ... more wages as needed
+  ];
+
+  const inflationRate = 0.02; // Annual inflation rate of 2% for simplicity
+
+  // Preparing the wage and inflation-adjusted data
   let wageData = [];
-  for (let i = 0; i < userWageData.length; i++) {
-    let wage = userWageData[i].wage;
-    let startDate = userWageData[i].date;
-    let endDate;
+  let inflationAdjustedData = [];
 
-    if (i + 1 < userWageData.length) {
-      // if not the last entry, set endDate to the next entries startDate
-      endDate = userWageData[i + 1].date;
-    } else {
-      // if last entry, set endDate to todays date
-      endDate = new Date().toISOString().split('T')[0];
+  wages.forEach((wage, wageIndex) => {
+    for (let month = wage.startPeriod; month <= wage.endPeriod; month++) {
+      wageData.push(wage.amount);
+
+      // Calculate the cumulative inflation since the start of this wage period
+      let cumulativeInflation = Math.pow(1 + inflationRate, (month - wages[wageIndex].startPeriod) / 12);
+      let adjustedWage = wage.amount * cumulativeInflation;
+      inflationAdjustedData.push(adjustedWage);
     }
-
-    wageData.push(new wageGraphDatapoint(wage, startDate, endDate));
-  }
-
-
-  const inflationAdjustedData = [];
+  });
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
