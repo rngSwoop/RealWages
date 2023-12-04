@@ -1,5 +1,5 @@
 import React from 'react';
-import { LineChart } from 'react-native-chart-kit';
+import { LineChart } from 'react-native-charts-wrapper';
 import { Dimensions } from 'react-native';
 
 const wageData = [
@@ -10,43 +10,46 @@ const wageData = [
 ];
 
 // const processData = (data) => {
-//     let datasets = [];
-//     for (let i = 0; i < data.length - 1; i++) {
-//         datasets.push({
-//             data: [data[i].wage, data[i].wage]
-//         });
-//     }
-//     // Add the last wage as a flat line
-//     datasets.push({
-//         data: [data[data.length - 1].wage, data[data.length - 1].wage]
+//     let processedData = [];
+//     data.forEach((item, index) => {
+//         processedData.push(item.wage); // Start of the wage level
+//         if (index < data.length - 1) {
+//             // Extend the same wage level until the next one starts
+//             processedData.push(item.wage);
+//         }
 //     });
-//     return datasets;
+//     return [{ data: processedData }];
 // };
 
 const processData = (data) => {
-    let processedData = [];
+    let chartData = [];
+
     data.forEach((item, index) => {
-        processedData.push(item.wage); // Start of the wage level
+        // Convert the date to a format that can be used as an x-value, e.g., timestamp
+        const dateAsTimestamp = new Date(item.date).getTime();
+
+        // Add a point for the start of the wage
+        chartData.push({ x: dateAsTimestamp, y: item.wage });
+
+        // If this is not the last item, add another point for the end of the wage period
         if (index < data.length - 1) {
-            // Extend the same wage level until the next one starts
-            processedData.push(item.wage);
+            const endDateAsTimestamp = new Date(data[index + 1].date).getTime();
+            chartData.push({ x: endDateAsTimestamp, y: item.wage });
+        }
+        // If it's the last item, use the current date as the end date
+        else {
+            const currentDateAsTimestamp = new Date().getTime();
+            chartData.push({ x: currentDateAsTimestamp, y: item.wage });
         }
     });
-    return [{ data: processedData }];
+
+    return chartData;
 };
 
-// const processData = (data) => {
-//     let processedData = [];
-//     data.forEach((item) => {
-//         processedData.push({})
-//     });
-//     return processedData;
+// const getUniqueYears = (data) => {
+//     const years = data.map(item => new Date(item.date).getFullYear().toString());
+//     return [...new Set(years)]; // Removing duplicates
 // };
-
-const getUniqueYears = (data) => {
-    const years = data.map(item => new Date(item.date).getFullYear().toString());
-    return [...new Set(years)]; // Removing duplicates
-};
 
 const addEndDateToWageData = (data) => {
     return data.map((item, index) => {
@@ -56,11 +59,22 @@ const addEndDateToWageData = (data) => {
 };
 
 const modifiedWageData = addEndDateToWageData(wageData);
-const uniqueYears = getUniqueYears(wageData);
+// const uniqueYears = getUniqueYears(wageData);
+
+// const chartData = {
+//     labels: uniqueYears,
+//     datasets: processData(modifiedWageData)
+// };
 
 const chartData = {
-    labels: uniqueYears,
-    datasets: processData(modifiedWageData)
+    dataSets: [{
+        values: processData(modifiedWageData),
+        label: 'Wage Data',
+        config: {
+            color: 'black', // Set the color as needed
+            lineWidth: 2,   // Set the line width as needed
+        },
+    }],
 };
 
 const chartConfig = {
@@ -77,20 +91,24 @@ const chartConfig = {
 const Graph = () => {
     return (
         <LineChart
+            style={{ flex: 1 }}
             data={chartData}
             width={Dimensions.get('window').width}
             height={220}
             yAxisLabel="$"
             yAxisInterval={1}
-            chartConfig={chartConfig}
-            bezier={false}
-            style={{
-                marginVertical: 8,
-                borderRadius: 16,
-                margin: 15
+            chartConfig={{
+                backgroundColor: '#fff',
+                backgroundGradientFrom: '#fff',
+                backgroundGradientTo: '#fff',
+                decimalPlaces: 0,
+                color: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
+                labelColor: (opacity = 1) => `rgba(0, 0, 0, ${opacity})`,
             }}
+            bezier={false}
         />
     );
 };
+
 
 export default Graph;
