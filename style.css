@@ -1,0 +1,93 @@
+/* @import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    background-color: #005454;
+    color: #fdc48c;
+    height: 70vh;
+}
+
+.headerdiv {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
+    margin-left: 15%;
+    margin-right: 15%;
+}
+
+.headerdiv h1 {
+    flex-basis: 50%;
+    text-align: left;
+    font-size: 100px;
+}
+
+.headerdiv p {
+    flex-basis: 50%;
+    text-align: left;
+    font-size: 40px;
+} */
+
+@import url('https://fonts.googleapis.com/css2?family=Roboto&display=swap');
+
+* {
+    padding: 0;
+    margin: 0;
+}
+
+body {
+    font-family: 'Roboto', sans-serif;
+}
+
+header {
+    background-color: #005454;
+    color: #fdc48c;
+    height: 90vh;
+}
+
+.headerdiv {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 100%;
+    padding-left: 10%; /* Adjust as needed */
+    padding-right: 10%; /* Adjust as needed */
+}
+
+.headerdiv h1 {
+    text-align: left;
+    font-size: 100px;
+    width: 50%;
+}
+
+.innerheaderdiv {
+    width: 50%;
+    text-align: left;
+}
+
+.innerheaderdiv h2 {
+    font-size: 40px;
+    padding-bottom: 20px;
+}
+
+.innerheaderdiv p {
+    font-size: 20px;
+}
+
+main {
+    padding-top: 60px;
+    margin: 0 10%;
+}
+
+.problem h2 {
+    font-size: 60px;
+}
