@@ -10,7 +10,7 @@ const ResourcesScreen = ({ navigation }) => {
       headerStyle: {
         backgroundColor: 'white', // Set the background color of the header
       },
-      headerTintColor: 'black', // Set the text color of the header
+      headerTintColor: '#2980b9', // Set the text color of the header
       headerTitleStyle: {
         fontWeight: 'bold', // Set the font weight of the title
       },
@@ -102,11 +102,11 @@ const ResourcesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: "#535c79",
+    backgroundColor: "#EAEAEA",
     padding: 15
   },
   header: {
-    color: "#dad873",
+    color: "#2C3E50",
     fontSize: 20,
     fontWeight: '600',
   },
@@ -117,14 +117,13 @@ const styles = StyleSheet.create({
     margin: 10
   },
   body: {
-    color: "#58b368",
+    color: "#3498db",
   },
   description: {
-    // color: "#309975",
-    color: "white"
+    color: "#555555"
   },
   line: {
-    borderBottomColor: '#efeeb4',
+    borderBottomColor: 'black',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
