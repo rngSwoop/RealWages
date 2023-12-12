@@ -54,6 +54,8 @@ main {
     font-size: 60px;
 }
 
+/* write css to create a two column layout using flex */
+
 @media (max-width: 1150px) {
     .headerdiv {
         flex-direction: column;
