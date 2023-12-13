@@ -8,10 +8,15 @@ import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where, deleteD
 const Graph2 = () => {
     const [data, setData] = useState([]); // State to hold the user data
     const [wageDataArray, setWageDataArray] = useState([]);
+    const [adjustedWages, setAdjustedWages] = useState([]);
     const [chartData, setChartData] = useState(null); // State for LineChart data
     const [runNextFunc, setRunNextFunc] = useState(false);
     const [dataFetched, setDataFetched] = useState(false);
     const { userID } = useContext(UserContext);
+
+    const [formattedWages, setFormattedWages] = useState([]);
+
+    const wages = [];
 
     const fetchUserWageData = async () => {
         try {
@@ -38,6 +43,42 @@ const Graph2 = () => {
                 return dateA - dateB;
             });
 
+            // Formatting the wage data into the desired structure
+            let previousWage = null;
+
+            userWageData.forEach((dataPoint, index) => {
+                const formattedDate = `20${dataPoint.date.slice(-2)}-${dataPoint.date.slice(0, 2)}-${dataPoint.date.slice(3, 5)}`;
+                if (index === 0) {
+                    previousWage = {
+                        startDate: formattedDate,
+                        wage: dataPoint.wage,
+                    };
+                } else {
+                    wages.push({
+                        startDate: previousWage.startDate,
+                        endDate: formattedDate,
+                        wage: previousWage.wage,
+                    });
+
+                    previousWage = {
+                        startDate: formattedDate,
+                        wage: dataPoint.wage,
+                    };
+                }
+            });
+
+            // Add the last wage entry (if any)
+            if (previousWage !== null) {
+                wages.push({
+                    startDate: previousWage.startDate,
+                    endDate: new Date().toISOString().slice(0, 10), // Set the end date to today's date
+                    wage: previousWage.wage,
+                });
+            }
+
+            console.log('Formatted wages:', wages);
+            setFormattedWages(wages);
+
             //console.log(userWageData);
             setData(userWageData);
             setRunNextFunc(true);
@@ -49,6 +90,49 @@ const Graph2 = () => {
     useEffect(() => {
         fetchUserWageData();
     }, [userID]);
+
+   // update inflation data
+   useEffect(() => {
+       if (runNextFunc) {
+           const fetchInflationForWages = async () => {
+               console.log("Wages state: ", formattedWages);
+               if (formattedWages.length === 0) {
+                   // Handle empty wages array condition
+                   console.log('Wages array is empty');
+                   return;
+               }
+
+               try {
+                   const inflationData = await Promise.all(formattedWages.map(dataPoint => {
+                       return fetchInflation({
+                           startDate: dataPoint.startDate,
+                           endDate: dataPoint.endDate,
+                           wage: dataPoint.wage,
+                       });
+                   }));
+
+                   console.log("Inflation Data: ", inflationData);
+                   setAdjustedWages(inflationData);
+                   setDataFetched(true);
+               } catch (error) {
+                   console.error('Error fetching inflation data:', error);
+               }
+           };
+
+           fetchInflationForWages();
+       }
+   }, [runNextFunc, formattedWages]);
+
+    const fetchInflation = async ({ startDate, endDate, wage }) => {
+        try {
+            const response = await fetch(`https://www.statbureau.org/calculate-inflation-price-json?country=united-states&start=${startDate}&end=${endDate}&amount=${wage}&format=true`);
+            const data = await response.json();
+            return { startDate, endDate, wage: data };
+        } catch (error) {
+            console.error('Error fetching inflation data:', error);
+            throw error;
+        }
+    };
 
     // Logic to prepare wageDataArray and set LineChart data
     useEffect(() => {
@@ -126,10 +210,15 @@ const Graph2 = () => {
             labels: xLabels,
             datasets: [
                 {
-                    data: wageDataArray,
+                    data: [50000, 50000, 50000, 50000, 50000, 50000, 50000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000],
                     color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
                     strokeWidth: 2,
                 },
+                {
+                    data: [50000, 50028, 50056, 50084, 50112, 50140, 50168, 75000, 75156, 75312, 75468, 75624, 75780, 75936, 76092, 76248, 76404, 76560, 76716, 76872, 90000, 90734, 91468, 92202, 92936, 93670, 94404, 95138],
+                    color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Color for inflation-adjusted line
+                    strokeWidth: 2,
+                }
             ],
         };
 
@@ -140,6 +229,37 @@ const Graph2 = () => {
             setDataFetched(true);
         }
     }, [data, runNextFunc]);
+
+    // When wage data array changes, build inflation array
+    useEffect(() => {
+        if (adjustedWages.length === 0 || wageDataArray.length === 0) return;
+
+        const inflationArray = Array(wageDataArray.length).fill(0); // Declare array of the size of the wage data array
+        let startIndex = 0;
+
+        adjustedWages.forEach((adjustedWage, index) => {
+            const adjustedValue = parseFloat(adjustedWage.wage.replace('$', '').replace(',', '')); // Assuming the adjusted wage is in a string format like "$50 198.27"
+            const startDate = new Date(adjustedWage.startDate);
+            const endDate = new Date(adjustedWage.endDate);
+            const intervalBetweenWages = (endDate.getFullYear() - startDate.getFullYear()) * 12 + (endDate.getMonth() - startDate.getMonth());
+            console.log("intervalBetweenWages: ", intervalBetweenWages);
+
+            let endIndex = index === adjustedWages.length - 1 ? wageDataArray.length : startIndex + intervalBetweenWages; // Calculate endIndex for each section
+            console.log("endIndex: ", endIndex);
+
+            const rateOfChange = adjustedValue - wageDataArray[startIndex]; // Calculate the rate of change
+            console.log("rateOfChange: ", rateOfChange);
+
+            for (let i = startIndex; i < endIndex; i++) {
+                inflationArray[i] = wageDataArray[i] + (rateOfChange * (i - startIndex + 1) / intervalBetweenWages); // Update values based on rate of change
+            }
+
+            startIndex = endIndex;
+        });
+
+        // Do something with the inflationArray here, like setting it to state
+        console.log("Lets hope this works: ", inflationArray);
+    }, [wageDataArray, adjustedWages]);
 
 
     return (
