@@ -15,6 +15,25 @@ import {auth, firestore } from '../../firebase.js';
 import { doc, getDoc, setDoc, addDoc, collection, getDocs, query, where, deleteDoc } from 'firebase/firestore';
 
 const ProfileScreen = ({navigation}) => {
+    // Customizing the header
+    const navigationOptions = {
+      title: 'Profile', // Set the title of the header
+      headerStyle: {
+        backgroundColor: '#3e455b', // Set the background color of the header
+      },
+      headerTintColor: '#efeeb4', // Set the text color of the header
+      headerTitleStyle: {
+        fontWeight: 'bold', // Set the font weight of the title
+      },
+      headerTitleAlign: 'left',
+    };
+
+    // Apply the navigation options
+    React.useLayoutEffect(() => {
+      navigation.setOptions(navigationOptions);
+    }, [navigation]);
+
+
   const [data, setData] = useState([]); // State to hold the list of entries
   const [modalVisible, setModalVisible] = useState(false);
   const [newDate, setNewDate] = useState('');
@@ -231,7 +250,7 @@ const ProfileScreen = ({navigation}) => {
           )}
         />
         <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Add</Text>
+          <Text style={styles.buttonText}>Add Entry</Text>
         </TouchableOpacity>
       </View>
 
@@ -298,20 +317,20 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     width: '100%',
     borderColor: 'green',
-    borderWidth: 1,
+    //borderWidth: 1,
   },
   listItemContainer: {
     alignItems: 'center',
     width: '65%',
     flexDirection: 'row',
     borderColor: 'blue',
-    borderWidth: 1,
+    //borderWidth: 1,
   },
   listItem: {
     marginVertical: 10,
     width: '100%',
     borderColor: 'red',
-    borderWidth: 1,
+    //borderWidth: 1,
   },
   listText: {
     color: 'white',
@@ -337,6 +356,7 @@ const styles = StyleSheet.create({
   addButton: {
     marginTop: 20,
     padding: 10,
+
     backgroundColor: '#309975',
     borderRadius: 5,
   },

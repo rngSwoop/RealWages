@@ -3,8 +3,26 @@ import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity
 import Graph from '../components/Graph';
 import Graph2 from '../components/Graph2';
 
-const HomeScreen = () => {
+const HomeScreen = ({ navigation }) => {
   const [visibleIndex, setVisibleIndex] = useState(null);
+
+  // Customizing the header
+  const navigationOptions = {
+    title: 'Home', // Set the title of the header
+    headerStyle: {
+      backgroundColor: '#3e455b', // Set the background color of the header
+    },
+    headerTintColor: '#efeeb4', // Set the text color of the header
+    headerTitleStyle: {
+      fontWeight: 'bold', // Set the font weight of the title
+    },
+    headerTitleAlign: 'left',
+  };
+
+  // Apply the navigation options
+  React.useLayoutEffect(() => {
+    navigation.setOptions(navigationOptions);
+  }, [navigation]);
 
   const buttons = [
     { label: "What is Inflation?", definition: "Inflation is the rate at which the general level of prices for goods and services is rising, and consequently, the value of your money is eroding. In simpler terms, when there is inflation, each dollar you have buys you less than it did before, making it harder to afford the same things you could with the same amount of money in the past." },
@@ -23,7 +41,7 @@ const HomeScreen = () => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 5, fontWeight: "bold", color: "black" }}>
+        <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 5, fontWeight: "bold", color: "white" }}>
           Wage vs. Inflation
         </Text>
         <Graph2/>
@@ -50,18 +68,28 @@ const HomeScreen = () => {
 };
 
 const styles = StyleSheet.create({
-  container: {
+  scrollContainer: {
+    flex: 1,
     padding: 5,
     justifyContent: "center",
     alignItems: "center",
     width: '100%',
+    backgroundColor: "#454d66",
   },
+  container: {
+      //flex: 1,
+      padding: 5,
+      justifyContent: "center",
+      alignItems: "center",
+      width: '100%',
+      backgroundColor: "#454d66",
+    },
   buttonText: {
     fontWeight: 'bold',
-    color: "black",
+    color: "white",
   },
   definitionText: {
-    color: "black",
+    color: "#efeeb4",
   },
   buttonView: {
     width: "100%",
@@ -83,7 +111,7 @@ const styles = StyleSheet.create({
   button: {
     padding: 10,
     margin: 5,
-    backgroundColor: "white",
+    backgroundColor: "#636e83",
     borderWidth: 1,
     borderBottomColor: "grey",
     borderRadius: 10,

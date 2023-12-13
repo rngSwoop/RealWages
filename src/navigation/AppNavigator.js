@@ -34,14 +34,14 @@ const MainTabs = ({ route }) => {
           height: 60,
           backgroundColor: "#3b424f",
          },
-         tabBarActiveTintColor: "#257458", // Set the active text color
-         tabBarActiveBackgroundColor: "#efeeb4",
-         tabBarInactiveTintColor: "#309975", // Set the inactive text color
+         tabBarActiveTintColor: "#efeeb4", // Set the active text color
+         tabBarActiveBackgroundColor: "#636e83",
+         tabBarInactiveTintColor: "#efeeb4", // Set the inactive text color
       }}
     >
-      <Tab.Screen name="Resources" component={ResourcesScreen} />
-      <Tab.Screen name="Home" component={HomeScreen} />
       <Tab.Screen name="Profile" component={ProfileScreen}/>
+      <Tab.Screen name="Home" component={HomeScreen} />
+      <Tab.Screen name="Resources" component={ResourcesScreen} />
     </Tab.Navigator>
   );
 };
