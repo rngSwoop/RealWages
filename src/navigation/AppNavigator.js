@@ -32,8 +32,11 @@ const MainTabs = ({ route }) => {
         tabBarLabelStyle: { fontSize: 16 }, // Font size of the tab labels
         tabBarStyle: { 
           height: 60,
-          // backgroundColor: "#292e3d"
-         }
+          backgroundColor: "#3b424f",
+         },
+         tabBarActiveTintColor: "#257458", // Set the active text color
+         tabBarActiveBackgroundColor: "#efeeb4",
+         tabBarInactiveTintColor: "#309975", // Set the inactive text color
       }}
     >
       <Tab.Screen name="Resources" component={ResourcesScreen} />

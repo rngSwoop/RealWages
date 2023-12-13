@@ -8,9 +8,9 @@ const ResourcesScreen = ({ navigation }) => {
     const navigationOptions = {
       title: 'Resources', // Set the title of the header
       headerStyle: {
-        backgroundColor: 'white', // Set the background color of the header
+        backgroundColor: '#3e455b', // Set the background color of the header
       },
-      headerTintColor: '#2980b9', // Set the text color of the header
+      headerTintColor: '#3dc293', // Set the text color of the header
       headerTitleStyle: {
         fontWeight: 'bold', // Set the font weight of the title
       },
@@ -102,13 +102,18 @@ const ResourcesScreen = ({ navigation }) => {
 const styles = StyleSheet.create({
   container: {
     height: '100%',
-    backgroundColor: "#EAEAEA",
+    backgroundColor: "#454d66",
     padding: 15
   },
   header: {
-    color: "#2C3E50",
+    color: "#3dc293",
     fontSize: 20,
     fontWeight: '600',
+    /* outline attempt
+    textShadowColor: 'white', // Set the shadow color to white
+    textShadowOffset: { width: 1, height: 1 }, // Set the shadow offset
+    textShadowRadius: 0.5, // Set the shadow radius 
+    */
   },
   sectionContainer: {
     padding: 5,
@@ -117,13 +122,13 @@ const styles = StyleSheet.create({
     margin: 10
   },
   body: {
-    color: "#3498db",
+    color: "#efeeb4",
   },
   description: {
-    color: "#555555"
+    color: "white"
   },
   line: {
-    borderBottomColor: 'black',
+    borderBottomColor: 'white',
     borderBottomWidth: StyleSheet.hairlineWidth,
   },
 });
