@@ -1,6 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react';
 import { View, ScrollView, Text, TextInput, Button, StyleSheet, TouchableOpacity, SizedBox } from 'react-native';
 import Graph from '../components/Graph';
+import Graph2 from '../components/Graph2';
 
 const HomeScreen = () => {
   const [visibleIndex, setVisibleIndex] = useState(null);
@@ -25,7 +26,7 @@ const HomeScreen = () => {
         <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 5, fontWeight: "bold", color: "black" }}>
           Wage vs. Inflation
         </Text>
-        <Graph/>
+        <Graph2/>
         <View style={styles.buttonView}>
           {buttons.map((button, index) => (
             <View key={index} style={styles.buttonContainer}>

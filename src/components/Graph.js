@@ -102,8 +102,10 @@ const Graph = () => {
             inflationAdjustedData.push(adjustedWage);
         }
     });
+    console.log("wageData: ", wageData);
 
     return (
+
         <LineChart
             data={{
                 labels: ['2019', '2020', '2021', '2022'],
