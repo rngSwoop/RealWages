@@ -62,11 +62,29 @@ const Graph2 = () => {
         const minYear = Math.min(...years);
         const maxYear = Math.max(...years);
 
-        // Calculate the number of labels and the interval between them
-        const numLabels = 4;
-        const interval = Math.ceil((maxYear - minYear) / (numLabels - 1));
-
-        const xLabels = Array.from({ length: numLabels }, (_, i) => (minYear + i * interval + 2000).toString());
+        // Calculate the number of labels
+        const xLabels = [];
+        //if the minYear and maxYear are up to 5 years apart, then show every year
+        if (maxYear - minYear <= 5) {
+            for (let i = minYear; i <= maxYear; i++) {
+                xLabels.push((i+2000).toString());
+            }
+        } else {
+            //otherwise, if the difference between minYear and maxYear is even, then show 4 years
+            if ((maxYear - minYear) % 2 == 0) {
+                xLabels.push((minYear+2000).toString());
+                xLabels.push((minYear + Math.floor((maxYear - minYear) / 3))+2000);
+                xLabels.push((minYear + Math.floor(2 * (maxYear - minYear) / 3))+2000);
+                xLabels.push((maxYear+2000).toString());
+            } else {
+                xLabels.push((minYear+2000).toString());
+                xLabels.push((minYear + Math.floor((maxYear - minYear) / 4))+2000);
+                xLabels.push((minYear + Math.floor(2 * (maxYear - minYear) / 4))+2000);
+                xLabels.push((minYear + Math.floor(3 * (maxYear - minYear) / 4))+2000);
+                xLabels.push((maxYear+2000).toString());
+            }
+        }
+        
         console.log("xLabels: ", xLabels);
         console.log("Number of indices: ", (maxYear - minYear + 1) * 12);
 
