@@ -2,6 +2,7 @@ import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import AntdesignIcon from 'react-native-vector-icons/AntDesign';
 
 import LoginScreen from '../screens/LoginScreen.js';
 import ResourcesScreen from '../screens/ResourcesScreen.js';
@@ -22,22 +23,34 @@ const AppNavigator = () => {
     </NavigationContainer>
   );
 };
-
 // Define the main tab navigator for authenticated users
-const MainTabs = ({ route }) => {
-
+const MainTabs = () => {
   return (
     <Tab.Navigator
-      screenOptions={{
-        tabBarLabelStyle: { fontSize: 16, fontFamily: 'Roboto-Regular' }, // Font size of the tab labels
+      screenOptions={({ route }) => ({
+        tabBarLabelStyle: { fontSize: 16, fontFamily: 'Roboto-Regualar' }, // Font size of the tab labels
         tabBarStyle: { 
           height: 60,
           backgroundColor: "#3b424f",
-         },
-         tabBarActiveTintColor: "#efeeb4", // Set the active text color
-         tabBarActiveBackgroundColor: "#636e83",
-         tabBarInactiveTintColor: "#efeeb4", // Set the inactive text color
-      }}
+        },
+        tabBarActiveTintColor: "#efeeb4", // Set the active text color
+        tabBarActiveBackgroundColor: "#636e83",
+        tabBarInactiveTintColor: "#efeeb4", // Set the inactive text color
+        tabBarIcon: ({ focused, color, size }) => {
+          let iconName;
+
+          if (route.name === 'Profile') {
+            iconName = focused ? 'user' : 'user';
+          } else if (route.name === 'Home') {
+            iconName = focused ? 'home' : 'home';
+          } else if (route.name === 'Resources') {
+            iconName = focused ? 'book' : 'book';
+          }
+
+          // You can return any component that you like here!
+          return <AntdesignIcon name={iconName} size={size} color={color}/>;
+        },
+      })}
     >
       <Tab.Screen name="Profile" component={ProfileScreen}/>
       <Tab.Screen name="Home" component={HomeScreen} />

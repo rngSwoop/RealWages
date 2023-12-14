@@ -24,7 +24,6 @@ const ResourcesScreen = ({ navigation }) => {
 
   return (
     <View style={styles.container}>
-
       <TouchableOpacity onPress={() => Linking.openURL('https://www.ziprecruiter.com')}>
         <View style={styles.sectionContainer}>
           <Text style={styles.header}>
