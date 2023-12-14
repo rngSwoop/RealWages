@@ -211,12 +211,12 @@ const Graph2 = () => {
             datasets: [
                 {
                     data: [50000, 50000, 50000, 50000, 50000, 50000, 50000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 75000, 90000, 90000, 90000, 90000, 90000, 90000, 90000, 90000],
-                    color: (opacity = 1) => `rgba(134, 65, 244, ${opacity})`,
+                    color: () => `rgba(48, 200, 117, 1)`, // Black with opacity 1
                     strokeWidth: 2,
                 },
                 {
                     data: [50000, 50028, 50056, 50084, 50112, 50140, 50168, 75000, 75156, 75312, 75468, 75624, 75780, 75936, 76092, 76248, 76404, 76560, 76716, 76872, 90000, 90734, 91468, 92202, 92936, 93670, 94404, 95138],
-                    color: (opacity = 1) => `rgba(0, 0, 255, ${opacity})`, // Color for inflation-adjusted line
+                    color: () => `rgba(255, 0, 0, .7)`, // Red with opacity 0.5
                     strokeWidth: 2,
                 }
             ],
@@ -275,11 +275,13 @@ const Graph2 = () => {
                   yAxisInterval={1} // optional, defaults to 1
                   chartConfig={{
                     backgroundColor: "#e26a00",
-                    backgroundGradientFrom: "#fb8c00",
-                    backgroundGradientTo: "#ffa726",
+                    backgroundGradientFrom: "#fff59d", // Lighter shade of yellow
+                    backgroundGradientTo: "#e1a025",   // Darker shade of yellow
                     decimalPlaces: 0,
-                    color: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`,
-                    labelColor: (opacity = 1) => `rgba(255, 255, 255, ${opacity})`
+                    color: () => `rgba(70, 70, 70, .3)`, // Adjust the line color
+                    labelColor: () => `rgba(70, 70, 70, 1)`, // Adjust the text color and opacity
+                    fillShadowGradientOpacity: 0,
+                    useShadowColorFromDataset: true
                   }}
                   style={{
                     marginVertical: 8,

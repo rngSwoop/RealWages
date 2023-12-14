@@ -12,7 +12,7 @@ const ResourcesScreen = ({ navigation }) => {
       },
       headerTintColor: '#efeeb4', // Set the text color of the header
       headerTitleStyle: {
-        fontWeight: 'bold', // Set the font weight of the title
+        fontFamily: 'Roboto-Bold', // Set the font of the title
       },
       headerTitleAlign: 'left',
     };
@@ -103,12 +103,14 @@ const styles = StyleSheet.create({
   container: {
     height: '100%',
     backgroundColor: "#454d66",
-    padding: 15
+    padding: 15,
   },
   header: {
-    color: "#efeeb4",
-    fontSize: 20,
-    fontWeight: '600',
+    color: "white",
+    fontSize: 22,
+    //fontWeight: '600',
+    fontFamily: 'AlegreyaSans-Bold',
+    alignSelf: 'center',
     /* outline attempt
     textShadowColor: 'white', // Set the shadow color to white
     textShadowOffset: { width: 1, height: 1 }, // Set the shadow offset
@@ -117,19 +119,31 @@ const styles = StyleSheet.create({
   },
   sectionContainer: {
     padding: 5,
-    paddingRight: 40,
+    paddingVertical: 5,
     width: '100%',
-    margin: 10
+    margin: 10,
+    alignSelf: 'center',
+    justifyContent: 'center',
+    //borderWidth: 1,
   },
   body: {
     color: "#3dc293",
+    fontFamily: 'Roboto-Italic',
+    alignSelf: 'center',
+    padding: 2,
   },
   description: {
-    color: "white"
+    color: "white",
+    fontSize: 15,
+    fontFamily: 'Roboto-Regular',
+    alignSelf: 'center',
+    textAlignVertical: 'center', // Aligns text vertically to the center
+    textAlign: 'center', // Aligns text horizontally to the center
+    //paddingBottom: 5,
   },
   line: {
-    borderBottomColor: 'white',
-    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderBottomColor: '#efeeb4',
+    borderBottomWidth: 2,
   },
 });
 

@@ -23,7 +23,7 @@ const ProfileScreen = ({navigation}) => {
       },
       headerTintColor: '#efeeb4', // Set the text color of the header
       headerTitleStyle: {
-        fontWeight: 'bold', // Set the font weight of the title
+        fontFamily: 'Roboto-Bold', // Set the font weight of the title
       },
       headerTitleAlign: 'left',
     };
@@ -231,27 +231,33 @@ const ProfileScreen = ({navigation}) => {
   return (
     <View style={styles.container}>
       <View style={styles.listContainer}>
-        <FlatList
-          data={data}
-          keyExtractor={(item, index) => index.toString()}
-          renderItem={({item}) => (
-            <View style={styles.listItemContainer}>
-              <View style={styles.listItem}>
-                <Text style={styles.listText}>Date: {item.date}</Text>
-                <Text style={styles.listText}>Wage: {item.wage}</Text>
-              </View>
-              <TouchableOpacity style={styles.deleteButton} onPress={() => deleteItem(item)}>
-                <Text style={styles.buttonText}>Delete</Text>
-              </TouchableOpacity>
-              <TouchableOpacity style={styles.editButton} onPress={() => editItem(item)}>
-                <Text style={styles.buttonText}>Edit</Text>
-              </TouchableOpacity>
-            </View>
-          )}
-        />
-        <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Add Entry</Text>
-        </TouchableOpacity>
+        <Text style={styles.title}>Wage History</Text>
+            <FlatList
+              style={styles.list}
+              data={data}
+              keyExtractor={(item, index) => index.toString()}
+              renderItem={({item}) => (
+                <View style={styles.listItemContainer}>
+                  <View style={styles.listItem}>
+                    <Text style={styles.listText}>Date: {item.date}</Text>
+                    <Text style={styles.listText}>Wage: {item.wage}</Text>
+                  </View>
+                  <TouchableOpacity style={styles.deleteButton} onPress={() => deleteItem(item)}>
+                    <Text style={styles.buttonText}>Delete</Text>
+                  </TouchableOpacity>
+                  <TouchableOpacity style={styles.editButton} onPress={() => editItem(item)}>
+                    <Text style={styles.buttonText}>Edit</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+            />
+        {/* Button Container */}
+        <View style={styles.addButtonContainer}>
+          <TouchableOpacity style={styles.addButton} onPress={() => setModalVisible(true)}>
+            <Text style={styles.buttonText}>Add Entry</Text>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.emptyContainer}/>
       </View>
 
       <View style={styles.signOutContainer}>
@@ -310,13 +316,35 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#454d66',
     width: '100%',
+    //borderWidth: 1,
+  },
+  title: {
+    color: 'white',
+    fontFamily: 'AlegreyaSans-Bold',
+    fontSize: 30,
+    paddingTop: 12,
+  },
+  emptyContainer: {
+    flex: 20,
+    //borderWidth: 1,
   },
   listContainer: {
-    flex: 3,
+    flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
     width: '100%',
     borderColor: 'green',
+    //borderWidth: 1,
+  },
+  list: {
+    flexGrow: 1, // Ensure the list inside the container grows
+    width: '100%',
+    padding: 10,
+    //borderWidth: 1,
+  },
+  addButtonContainer: {
+    //marginBottom: 20,
+    alignItems: 'center',
     //borderWidth: 1,
   },
   listItemContainer: {
@@ -333,8 +361,9 @@ const styles = StyleSheet.create({
     //borderWidth: 1,
   },
   listText: {
-    color: 'white',
+    color: '#efeeb4',
     fontSize: 16,
+    fontFamily: 'Roboto-Medium'
   },
   deleteButton: {
     backgroundColor: '#d11a2a',
@@ -348,15 +377,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
   },
   signOutContainer: {
-    flex: 1,
+    //flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    width: '100%',
+    //width: '100%',
+    padding: 10,
+    //borderWidth: 1,
   },
   addButton: {
-    marginTop: 20,
+    margin: 5,
     padding: 10,
-
+    width: 100,
+    alignItems: 'center',
     backgroundColor: '#309975',
     borderRadius: 5,
   },
@@ -401,14 +433,18 @@ const styles = StyleSheet.create({
     backgroundColor: 'black',
     padding: 10,
     borderRadius: 5,
+    width: 100,
+    alignItems: 'center',
   },
   buttonText: {
     color: 'white',
     fontSize: 16,
+    fontFamily: 'Roboto-BoldItalic',
   },
   cancelButtonText: {
     color: 'black',
     fontSize: 16,
+    fontFamily: 'Roboto-Medium',
   },
 });
 

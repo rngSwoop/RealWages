@@ -14,7 +14,7 @@ const HomeScreen = ({ navigation }) => {
     },
     headerTintColor: '#efeeb4', // Set the text color of the header
     headerTitleStyle: {
-      fontWeight: 'bold', // Set the font weight of the title
+      fontFamily: 'Roboto-Bold', // Set the font of the title
     },
     headerTitleAlign: 'left',
   };
@@ -41,10 +41,17 @@ const HomeScreen = ({ navigation }) => {
   return (
     <ScrollView contentContainerStyle={styles.container}>
       <View style={styles.container}>
-        <Text style={{ fontSize: 24, textAlign: 'center', marginVertical: 5, fontWeight: "bold", color: "white" }}>
+        <Text style={styles.title}>
           Wage vs. Inflation
         </Text>
         <Graph2/>
+
+        {/* Lines for Actual Wage and Adjusted Wage */}
+        <View style={styles.linesContainer}>
+          <Text style={[styles.line, { borderColor: 'rgba(48, 200, 117, 1)' }]}>Actual wage</Text>
+          <Text style={[styles.line, { borderColor: 'rgba(255, 0, 0, .7)' }]}>Adjusted wage</Text>
+        </View>
+
         <View style={styles.buttonView}>
           {buttons.map((button, index) => (
             <View key={index} style={styles.buttonContainer}>
@@ -56,7 +63,7 @@ const HomeScreen = ({ navigation }) => {
               </TouchableOpacity>
               {visibleIndex === index && (
                 <View style={styles.definitionContainer}>
-                  <Text style={styles.definitonText}>{button.definition}</Text>
+                  <Text style={styles.definitionText}>{button.definition}</Text>
                 </View>
               )}
             </View>
@@ -76,6 +83,12 @@ const styles = StyleSheet.create({
     width: '100%',
     backgroundColor: "#454d66",
   },
+  title: {
+    color: 'white',
+    fontFamily: 'AlegreyaSans-Bold',
+    fontSize: 30,
+    padding: 6,
+  },
   container: {
       //flex: 1,
       padding: 5,
@@ -85,11 +98,14 @@ const styles = StyleSheet.create({
       backgroundColor: "#454d66",
     },
   buttonText: {
-    fontWeight: 'bold',
+    fontFamily: 'Roboto-Bold',
+    fontSize: 16,
     color: "white",
   },
   definitionText: {
+    fontFamily: 'Roboto-Regular',
     color: "#efeeb4",
+    fontSize: 14,
   },
   buttonView: {
     width: "100%",
@@ -129,6 +145,22 @@ const styles = StyleSheet.create({
     width: "80%",
     alignSelf: "center",
     marginVertical: 10,
+  },
+  linesContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 30, // Increased horizontal padding
+    marginHorizontal: 10,
+    marginTop: 10, // Adjusted top margin for space
+  },
+  line: {
+    color: 'white',
+    fontFamily: 'Roboto-Italic',
+    borderBottomWidth: 2,
+    alignSelf: 'center', // Center the text
+    flex: 1,
+    textAlign: 'center', // Center text horizontally
+    marginHorizontal: 12,
   },
 });
 

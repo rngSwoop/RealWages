@@ -29,7 +29,7 @@ const MainTabs = ({ route }) => {
   return (
     <Tab.Navigator
       screenOptions={{
-        tabBarLabelStyle: { fontSize: 16 }, // Font size of the tab labels
+        tabBarLabelStyle: { fontSize: 16, fontFamily: 'Roboto-Regular' }, // Font size of the tab labels
         tabBarStyle: { 
           height: 60,
           backgroundColor: "#3b424f",
